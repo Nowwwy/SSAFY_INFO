@@ -6,6 +6,11 @@ def is_user_data_valid(user_data):
         return True
     return False
 
+"""
+def is_user_data_valid(user_data):
+    return bool(user_data['id'] and user_data['password'])
+"""
+
 # 추가 테스트를 위한 코드 작성 가능
 # 예) print(함수명(인자))
 

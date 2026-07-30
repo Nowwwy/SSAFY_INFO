@@ -11,6 +11,3 @@ print(nums)
 result = nums.sort() # nums.sort() 만 쓰는게 맞다.
 print(result)   # none
 print(nums) # [7, 12, 23, 34, 45, 56, 89]
-
-
-

@@ -6,7 +6,7 @@ def under_60(scores):
     for score in scores:
         if score < 60:
             count += 1
-        return count
+    return count
 
 # 추가 테스트를 위한 코드 작성 가능
 # 예) print(함수명(인자))
