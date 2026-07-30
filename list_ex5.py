@@ -36,7 +36,7 @@ for student in students:
         total += student[subject]
 
     avg = total / 3
-    print(f"{'이름'} : {avg}")
+    print(f'{이름} : {avg}')
 
 # 각 과목별 총점을 '과목명 : 점수' 형태로 출력하세요
 """
@@ -57,12 +57,24 @@ for subject in ['국어', '영어', '수학']:
 
 # 각 과목별 최고을 받은 학생의 이름을 '과목 : 이름' 형태로 출력하세요
 
+"""
 for subject in ['국어', '영어', '수학']:
     best_score = max(student[subject] for student in students)
 
     for student in students:
         if student[subject] == best_score:
             print(f'{subject} : {student["이름"]}')
+"""
+
+for subject in ['국어', '영어', '수학']:
+    best_score = 0
+    for student in students:
+        if student[subject] > best_score:
+            best_score = student[subject]
+
+        for student in students:
+            if student[subject] == best_score:
+                print(f'{subject} : {student["이름"]}')
 
 # 각 과목별 평균 점수를 '과목명 : 점수' 형태로 출력하세요
 
