@@ -8,5 +8,3 @@ for i in range(len(nums)):
     cnt += 1
 print(sum_v)
 print(sum_v / cnt)
-
-
