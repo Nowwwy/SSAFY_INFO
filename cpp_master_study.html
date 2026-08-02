@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C++ Master - 스마트 웹 학습 플랫폼</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-sub: #475569;
+      --border-color: #e2e8f0;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --warning: #d97706;
+      --code-bg: #1e293b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+
+    /* Layout */
+    .app-header {
+      background-color: var(--card-bg);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .tab-btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      background: none;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-sub);
+      cursor: pointer;
+      border-radius: 0.375rem;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+      background-color: #f1f5f9;
+      color: var(--text-main);
+    }
+
+    .tab-btn.active {
+      background-color: #eff6ff;
+      color: var(--primary);
+    }
+
+    .main-container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    /* Concept & Quiz Cards */
+    .concept-section {
+      background: var(--card-bg);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      border: 1px solid var(--border-color);
+      margin-bottom: 2rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .concept-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .concept-body {
+      color: var(--text-sub);
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .code-block {
+      background-color: var(--code-bg);
+      color: #f8fafc;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 0.9rem;
+      overflow-x: auto;
+      margin: 1rem 0;
+      white-space: pre-wrap;
+    }
+
+    .quiz-card {
+      background: var(--card-bg);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      border: 1px solid var(--border-color);
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      position: relative;
+    }
+
+    .quiz-badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      background-color: #e0e7ff;
+      color: #3730a3;
+      font-size: 0.75rem;
+      font-weight: 700;
+      border-radius: 0.25rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .quiz-question {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    @media (min-width: 640px) {
+      .options-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .option-btn {
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      border-radius: 0.5rem;
+      text-align: left;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .option-btn:hover {
+      background-color: #f8fafc;
+      border-color: #cbd5e1;
+    }
+
+    .option-btn.correct {
+      background-color: #dcfce7 !important;
+      border-color: var(--success) !important;
+      color: #14532d;
+      font-weight: 600;
+    }
+
+    .option-btn.wrong {
+      background-color: #fee2e2 !important;
+      border-color: var(--danger) !important;
+      color: #7f1d1d;
+    }
+
+    .short-answer-container {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .short-answer-input {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .btn:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .btn-secondary {
+      background-color: #64748b;
+    }
+
+    .btn-secondary:hover {
+      background-color: #475569;
+    }
+
+    .quiz-explanation {
+      margin-top: 1rem;
+      padding: 1rem;
+      background-color: #f1f5f9;
+      border-radius: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--text-sub);
+      display: none;
+    }
+
+    .quiz-explanation.show {
+      display: block;
+    }
+
+    /* Section Control Header */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .filter-select {
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 0.375rem;
+      background: white;
+      font-size: 0.9rem;
+    }
+
+    /* Modal / Mock Controls */
+    .mock-controls {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      border: 1px solid var(--border-color);
+      margin-bottom: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .timer-display {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--warning);
+      margin-left: auto;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-sub);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="header-container">
+      <div class="logo">
+        <span>⚡ C++ Master</span>
+      </div>
+      <nav class="nav-tabs">
+        <button class="tab-btn active" onclick="switchTab('study')">학습하기</button>
+        <button class="tab-btn" onclick="switchTab('wrong')">오답노트</button>
+        <button class="tab-btn" onclick="switchTab('mock')">실전 모의고사</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-container">
+
+    <!-- 1. 학습하기 탭 -->
+    <section id="tab-study" class="tab-content active">
+      <div class="section-header">
+        <h2>C++ 핵심 개념 및 문제 풀이</h2>
+        <select id="chapterFilter" class="filter-select" onchange="renderStudyTab()">
+          <option value="all">전체 단원 보기</option>
+          <option value="ch1">1단원: C++ 기초 및 입출력</option>
+          <option value="ch2">2단원: 객체지향과 클래스</option>
+          <option value="ch3">3단원: 동적 할당 및 메모리</option>
+        </select>
+      </div>
+
+      <div id="studyContent"></div>
+    </section>
+
+    <!-- 2. 오답노트 탭 -->
+    <section id="tab-wrong" class="tab-content">
+      <div class="section-header">
+        <h2>나의 오답노트</h2>
+        <button class="btn btn-secondary" onclick="clearWrongAnswers()">오답노트 초기화</button>
+      </div>
+      <div id="wrongContent"></div>
+    </section>
+
+    <!-- 3. 실전 모의고사 탭 -->
+    <section id="tab-mock" class="tab-content">
+      <div class="section-header">
+        <h2>실전 모의고사</h2>
+      </div>
+
+      <div class="mock-controls">
+        <label for="mockCount">문항 수 선택:</label>
+        <select id="mockCount" class="filter-select">
+          <option value="3">3문항</option>
+          <option value="5" selected>5문항</option>
+          <option value="10">10문항</option>
+        </select>
+
+        <button class="btn" onclick="startMockExam()">모의고사 시작</button>
+        <div id="timerDisplay" class="timer-display" style="display: none;">남은 시간: 05:00</div>
+      </div>
+
+      <div id="mockQuestionsContainer"></div>
+
+      <div id="mockResult" style="display:none; margin-top:1.5rem; padding:1.5rem; background:white; border-radius:0.75rem; border:1px solid var(--border-color);"></div>
+
+      <div style="margin-top: 1.5rem; text-align: right;">
+        <button id="btnSubmitMock" class="btn" style="display: none;" onclick="submitMockExam()">제출 및 채점하기</button>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // --- 데이터 정의 ---
+    const CHAPTERS = [
+      {
+        id: 'ch1',
+        title: '1단원: C++ 기초 및 입출력',
+        concept: 'C++은 C언어의 확장으로 객체지향 프로그래밍(OOP)을 지원합니다. std::cout과 std::cin을 사용하여 입출력을 수행합니다.',
+        code: `#include <iostream>
+using namespace std;
+
+int main() {
+    cout << "Hello C++!" << endl;
+    return 0;
+}`
+      },
+      {
+        id: 'ch2',
+        title: '2단원: 객체지향과 클래스',
+        concept: '클래스는 객체를 생성하기 위한 틀이며, 멤버 변수와 멤버 함수로 구성됩니다. 접근 제어자(public, private, protected)를 제공합니다.',
+        code: `class Rectangle {
+private:
+    int width, height;
+public:
+    Rectangle(int w, int h) : width(w), height(h) {}
+    int getArea() { return width * height; }
+};`
+      },
+      {
+        id: 'ch3',
+        title: '3단원: 동적 할당 및 메모리',
+        concept: 'new 키워드로 동적 메모리를 할당하고 delete 키워드로 해제합니다. 메모리 누수를 방지하기 위해 사용 후 반드시 해제해야 합니다.',
+        code: `int* ptr = new int;
+*ptr = 100;
+delete ptr;
+
+int* arr = new int[5];
+delete[] arr;`
+      }
+    ];
+
+    const QUIZZES = [
+      {
+        id: 'q1',
+        chId: 'ch1',
+        type: 'MC', // 객관식
+        question: 'C++에서 표준 출력을 위해 사용하는 개체는 무엇인가요?',
+        opts: ['std::cin', 'std::cout', 'std::printf', 'std::output'],
+        ans: 1, // std::cout
+        explanation: 'std::cout은 <iostream> 헤더에 정의된 C++의 표준 출력 스트림 객체입니다.'
+      },
+      {
+        id: 'q2',
+        chId: 'ch1',
+        type: 'SA', // 단답형
+        question: 'C++에서 줄바꿈을 수행하며 출력 버퍼를 비우는 조작자의 이름을 입력하세요.',
+        ans: ['endl', 'std::endl'],
+        explanation: 'std::endl은 줄바꿈 문자를 출력함과 동시에 출력 버퍼를 플러시(flush)합니다.'
+      },
+      {
+        id: 'q3',
+        chId: 'ch2',
+        type: 'MC',
+        question: '클래스 외부에서 직접 접근할 수 없도록 멤버를 보호하는 접근 제어자는 무엇인가요?',
+        opts: ['public', 'protected', 'private', 'internal'],
+        ans: 2, // private
+        explanation: 'private으로 지정된 멤버는 해당 클래스의 멤버 함수 내에서만 접근할 수 있습니다.'
+      },
+      {
+        id: 'q4',
+        chId: 'ch2',
+        type: 'SA',
+        question: '객체가 생성될 때 자동으로 호출되는 특별한 멤버 함수의 명칭은 무엇인가요?',
+        ans: ['생성자', 'constructor'],
+        explanation: '생성자(Constructor)는 클래스와 동일한 이름을 가지며 반환 타입이 없는 함수입니다.'
+      },
+      {
+        id: 'q5',
+        chId: 'ch3',
+        type: 'MC',
+        question: 'C++에서 배열을 동적 할당 해제할 때 올바른 구문은 무엇인가요?',
+        opts: ['delete arr;', 'delete[] arr;', 'free(arr);', 'remove arr;'],
+        ans: 1, // delete[] arr;
+        explanation: '배열 형태로 dynamic memory를 할당받은 경우 delete[] 구문을 사용해야 합니다.'
+      },
+      {
+        id: 'q6',
+        chId: 'ch3',
+        type: 'SA',
+        question: '동적 할당을 위해 사용하는 키워드는 무엇인가요?',
+        ans: ['new'],
+        explanation: 'C++에서는 new 키워드를 통해 힙(Heap) 영역에 메모리를 동적으로 할당받습니다.'
+      }
+    ];
+
+    // --- 상태 관리 ---
+    let state = {
+      quizAnswers: {}, // { qId: { userAns: x, isCorrect: true/false } }
+      wrongAnswers: [] // [ qId1, qId2, ... ]
+    };
+
+    let examTimerInterval = null;
+    let mockQuestions = [];
+    let mockUserAnswers = {}; // 모의고사 전용 선택 답안 저장소
+
+    // --- 앱 초기화 ---
+    window.onload = function() {
+      loadState();
+      renderStudyTab();
+    };
+
+    function loadState() {
+      const saved = localStorage.getItem('cpp_master_state');
+      if (saved) {
+        state = JSON.parse(saved);
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem('cpp_master_state', JSON.stringify(state));
+    }
+
+    // --- 탭 전환 ---
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+      if (tabName === 'study') {
+        document.querySelectorAll('.tab-btn')[0].classList.add('active');
+        document.getElementById('tab-study').classList.add('active');
+        renderStudyTab();
+      } else if (tabName === 'wrong') {
+        document.querySelectorAll('.tab-btn')[1].classList.add('active');
+        document.getElementById('tab-wrong').classList.add('active');
+        renderWrongTab();
+      } else if (tabName === 'mock') {
+        document.querySelectorAll('.tab-btn')[2].classList.add('active');
+        document.getElementById('tab-mock').classList.add('active');
+      }
+    }
+
+    // --- 학습하기 탭 렌더링 ---
+    function renderStudyTab() {
+      const filter = document.getElementById('chapterFilter').value;
+      const container = document.getElementById('studyContent');
+      container.innerHTML = '';
+
+      const filteredChs = filter === 'all' 
+        ? CHAPTERS 
+        : CHAPTERS.filter(c => c.id === filter);
+
+      filteredChs.forEach(ch => {
+        let html = `
+          <div class="concept-section">
+            <h3 class="concept-title">${ch.title}</h3>
+            <p class="concept-body">${ch.concept}</p>
+            <div class="code-block">${escapeHtml(ch.code)}</div>
+          </div>
+        `;
+
+        const chQuizzes = QUIZZES.filter(q => q.chId === ch.id);
+        chQuizzes.forEach(q => {
+          html += renderSingleQuizCard(q, false);
+        });
+
+        container.innerHTML += html;
+      });
+    }
+
+    // --- HTML 이스케이프 ---
+    function escapeHtml(text) {
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // --- 단일 퀴즈 카드 HTML 생성 ---
+    function renderSingleQuizCard(q, isMock = false) {
+      const userAns = state.quizAnswers[q.id];
+      let optionsHtml = '';
+
+      if (q.type === 'MC') {
+        optionsHtml = `<div class="options-grid">` + 
+          q.opts.map((opt, idx) => {
+            let btnClass = 'option-btn';
+            if (userAns !== undefined && !isMock) {
+              if (idx === q.ans) btnClass += ' correct';
+              else if (userAns.userAns === idx && !userAns.isCorrect) btnClass += ' wrong';
+            }
+            
+            // 모의고사 모드일 때는 selectMockOption 호출
+            const clickAttr = isMock 
+              ? `onclick="selectMockOption('${q.id}', ${idx}, this)"`
+              : (userAns !== undefined ? '' : `onclick="submitMC('${q.id}', ${idx})"`);
+
+            return `<button class="${btnClass}" ${clickAttr}>${idx + 1}. ${escapeHtml(opt)}</button>`;
+          }).join('') +
+        `</div>`;
+      } else {
+        // 단답형 (SA)
+        const isSolved = userAns !== undefined && !isMock;
+        const inputVal = isSolved ? userAns.userAns : '';
+        const disabled = isSolved ? 'disabled' : '';
+
+        optionsHtml = `
+          <div class="short-answer-container">
+            <input type="text" id="input-${q.id}" class="short-answer-input" placeholder="정답을 입력하세요" value="${escapeHtml(inputVal)}" ${disabled}>
+            ${!isSolved && !isMock ? `<button class="btn" onclick="submitSA('${q.id}')">제출</button>` : ''}
+          </div>
+        `;
+      }
+
+      const showExp = (userAns !== undefined && !isMock) ? 'show' : '';
+
+      return `
+        <div class="quiz-card" id="quiz-card-${q.id}">
+          <span class="quiz-badge">${q.type === 'MC' ? '객관식' : '단답형'}</span>
+          <div class="quiz-question">${escapeHtml(q.question)}</div>
+          ${optionsHtml}
+          <div class="quiz-explanation ${showExp}">
+            <strong>해설:</strong> ${escapeHtml(q.explanation)}
+          </div>
+        </div>
+      `;
+    }
+
+    // --- 일반 연습 모드 제출 (MC / SA) ---
+    function submitMC(qId, selectedIdx) {
+      const q = QUIZZES.find(item => item.id === qId);
+      const isCorrect = (selectedIdx === q.ans);
+
+      state.quizAnswers[qId] = { userAns: selectedIdx, isCorrect };
+
+      if (!isCorrect && !state.wrongAnswers.includes(qId)) {
+        state.wrongAnswers.push(qId);
+      } else if (isCorrect) {
+        state.wrongAnswers = state.wrongAnswers.filter(id => id !== qId);
+      }
+
+      saveState();
+      renderStudyTab();
+    }
+
+    function submitSA(qId) {
+      const input = document.getElementById(`input-${qId}`);
+      if (!input) return;
+      const userVal = input.value.trim().toLowerCase();
+      if (!userVal) return;
+
+      const q = QUIZZES.find(item => item.id === qId);
+      const isCorrect = q.ans.some(a => a.toLowerCase().trim() === userVal);
+
+      state.quizAnswers[qId] = { userAns: input.value.trim(), isCorrect };
+
+      if (!isCorrect && !state.wrongAnswers.includes(qId)) {
+        state.wrongAnswers.push(qId);
+      } else if (isCorrect) {
+        state.wrongAnswers = state.wrongAnswers.filter(id => id !== qId);
+      }
+
+      saveState();
+      renderStudyTab();
+    }
+
+    // --- 오답노트 탭 렌더링 ---
+    function renderWrongTab() {
+      const container = document.getElementById('wrongContent');
+      container.innerHTML = '';
+
+      if (state.wrongAnswers.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <h3>🎉 틀린 문제가 없습니다!</h3>
+            <p>모든 문제를 완벽하게 이해하셨거나 아직 푸신 문제가 없습니다.</p>
+          </div>
+        `;
+        return;
+      }
+
+      state.wrongAnswers.forEach(qId => {
+        const q = QUIZZES.find(item => item.id === qId);
+        if (q) {
+          container.innerHTML += renderSingleQuizCard(q, false);
+        }
+      });
+    }
+
+    function clearWrongAnswers() {
+      if (confirm('오답노트를 초기화하시겠습니까?')) {
+        state.wrongAnswers = [];
+        saveState();
+        renderWrongTab();
+      }
+    }
+
+    // --- 모의고사 로직 ---
+    function startMockExam() {
+      mockUserAnswers = {}; // 선택 답안 초기화
+      clearInterval(examTimerInterval);
+
+      const count = parseInt(document.getElementById('mockCount').value);
+      const shuffled = [...QUIZZES].sort(() => 0.5 - Math.random());
+      mockQuestions = shuffled.slice(0, count);
+
+      const container = document.getElementById('mockQuestionsContainer');
+      container.innerHTML = '';
+
+      mockQuestions.forEach(q => {
+        container.innerHTML += renderSingleQuizCard(q, true);
+      });
+
+      document.getElementById('btnSubmitMock').style.display = 'inline-block';
+      document.getElementById('mockResult').style.display = 'none';
+
+      // 타이머 시작 (5분 = 300초)
+      let timeLeft = 300;
+      const timerDisplay = document.getElementById('timerDisplay');
+      timerDisplay.style.display = 'block';
+
+      function updateTimer() {
+        const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+        const s = (timeLeft % 60).toString().padStart(2, '0');
+        timerDisplay.textContent = `남은 시간: ${m}:${s}`;
+
+        if (timeLeft <= 0) {
+          clearInterval(examTimerInterval);
+          alert('시험 시간이 종료되었습니다! 자동 제출됩니다.');
+          submitMockExam();
+        }
+        timeLeft--;
+      }
+
+      updateTimer();
+      examTimerInterval = setInterval(updateTimer, 1000);
+    }
+
+    function selectMockOption(qId, selectedIdx, btnElem) {
+      mockUserAnswers[qId] = selectedIdx;
+      
+      const card = document.getElementById(`quiz-card-${qId}`);
+      const btns = card.querySelectorAll('.option-btn');
+      btns.forEach(b => {
+        b.style.borderColor = '';
+        b.style.fontWeight = 'normal';
+      });
+      btnElem.style.borderColor = 'var(--primary)';
+      btnElem.style.fontWeight = 'bold';
+    }
+
+    function submitMockExam() {
+      clearInterval(examTimerInterval);
+      let score = 0;
+
+      mockQuestions.forEach(q => {
+        const card = document.getElementById(`quiz-card-${q.id}`);
+        let isCorrect = false;
+
+        if (q.type === 'MC') {
+          const selectedIdx = mockUserAnswers[q.id];
+          if (selectedIdx === q.ans) {
+            isCorrect = true;
+          }
+
+          const btns = card.querySelectorAll('.option-btn');
+          btns.forEach((btn, idx) => {
+            btn.onclick = null;
+            btn.style.borderColor = '';
+            if (idx === q.ans) {
+              btn.classList.add('correct');
+            } else if (idx === selectedIdx && !isCorrect) {
+              btn.classList.add('wrong');
+            }
+          });
+          
+          if (selectedIdx !== undefined) {
+            state.quizAnswers[q.id] = { userAns: selectedIdx, isCorrect };
+          }
+        } else {
+          // 단답형 (SA)
+          const input = card.querySelector('.short-answer-input');
+          if (input) {
+            input.disabled = true;
+            const userVal = input.value.trim().toLowerCase();
+            if (userVal && q.ans.some(a => a.toLowerCase().trim() === userVal)) {
+              isCorrect = true;
+            }
+            if (userVal) {
+              state.quizAnswers[q.id] = { userAns: input.value.trim(), isCorrect };
+            }
+          }
+        }
+
+        if (isCorrect) {
+          score++;
+          state.wrongAnswers = state.wrongAnswers.filter(id => id !== q.id);
+        } else {
+          if (!state.wrongAnswers.includes(q.id)) {
+            state.wrongAnswers.push(q.id);
+          }
+        }
+
+        const exp = card.querySelector('.quiz-explanation');
+        if (exp) exp.classList.add('show');
+      });
+
+      saveState();
+
+      const resDiv = document.getElementById('mockResult');
+      const percent = Math.round((score / mockQuestions.length) * 100);
+      resDiv.style.display = 'block';
+      resDiv.innerHTML = `
+        <h3 style="color:var(--primary); margin-bottom:0.5rem;">🎉 채점 결과: ${score} / ${mockQuestions.length} 문제 정답 (${percent}점)</h3>
+        <p>틀린 문제는 오답노트에 자동 등록되었습니다. 오답노트 탭에서 재복습해보세요!</p>
+      `;
+      document.getElementById('btnSubmitMock').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
