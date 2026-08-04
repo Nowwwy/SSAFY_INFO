@@ -1,0 +1,16 @@
+# 설치: pip install -r requirements.txt
+# 기준 환경: Python 3.12.x
+
+# 노트북
+jupyterlab>=4.6.0,<5
+
+# 라이브 1, Python 핵심 문법과 API
+requests>=2.34.0,<3
+
+# 라이브 2, NumPy와 Pandas
+numpy>=2.5.0,<3
+pandas>=3.0.0,<4
+
+# 라이브 3, 데이터 시각화
+matplotlib>=3.11.0,<3.13
+seaborn>=0.13.2,<0.14
