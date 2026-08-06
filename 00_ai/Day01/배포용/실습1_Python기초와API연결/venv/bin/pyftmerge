@@ -1,0 +1,6 @@
+#!/Users/now/SSAFY/SSAFY_INFO/00_ai/Day01/배포용/실습1_Python기초와API연결/venv/bin/python
+import sys
+from fontTools.merge import main
+if __name__ == '__main__':
+    sys.argv[0] = sys.argv[0].removesuffix('.exe')
+    sys.exit(main())
